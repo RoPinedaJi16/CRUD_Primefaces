@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<title>PRACTICA CRUD PRIME FACES</title>
+</h:head>
+<h:body>
+
+	<h:form>
+		<p:commandButton value="Agregar Reporte" icon="ui-pencil-check"
+			actionListener="#{controllerReport.limpiarReport()}"
+			oncomplete="PF('dialogoAgregar').show();" update=":formAgregar">
+		</p:commandButton>
+	</h:form>
+
+	<p:separator />
+
+	<h:form id="formListado">
+		<p:dataTable id="tablaReportes" paginator="true"
+			paginatorPosition="bottom" rows="5" var="reporte"
+			value="#{controllerReport.reportes}"
+			emptyMessage="No Existen Reportes">
+
+			<p:column headerText="ID">
+				<h:outputText value="#{reporte.id}" />
+			</p:column>
+
+			<p:column headerText="TIPO">
+				<h:outputText value="#{reporte.tipo}" />
+			</p:column>
+
+			<p:column headerText="FOLIO">
+				<h:outputText value="#{reporte.folio}" />
+			</p:column>
+
+			<p:column headerText="COMENTARIOS">
+				<h:outputText value="#{reporte.comentario}" />
+			</p:column>
+
+			<p:column headerText="EDITAR" style="text-align: center"
+				exportable="false">
+				<p:commandButton icon="ui-icon-pencil" title="Editar"
+					oncomplete="PF('dialogoModificar').show();" update=":formModificar">
+					<f:setPropertyActionListener value="#{reporte}"
+						target="#{controllerReport.reporte}" />
+				</p:commandButton>
+			</p:column>
+
+			<p:column headerText="ELIMINAR" style="text-align: center"
+				exportable="false">
+				<p:commandButton icon="ui-icon-trash" title="Eliminar"
+					oncomplete="PF('dialogoEliminar').show();" update=":formEliminar">
+					<f:setPropertyActionListener value="#{reporte}"
+						target="#{controllerReport.reporte}" />
+				</p:commandButton>
+			</p:column>
+		</p:dataTable>
+
+		<p:separator />
+		<!--Reporte de Personas-->
+
+		<p:panel header="REPORTES GENERALES">
+			<p:commandButton value="Exportar a XML" ajax="false">
+				<p:dataExporter type="xml" target="tablaReportes"
+					fileName="Reportes"></p:dataExporter>
+			</p:commandButton>
+
+			<p:commandButton value="Exportar a CVS" ajax="false">
+				<p:dataExporter type="CVS" target="tablaReportes"
+					fileName="Reportes"></p:dataExporter>
+			</p:commandButton>
+
+			<p:commandButton value="Exportar a PDF" ajax="false">
+				<p:dataExporter type="pdf" target="tablaReportes"
+					fileName="Reportes"></p:dataExporter>
+			</p:commandButton>
+
+
+		</p:panel>
+
+
+
+	</h:form>
+
+
+	<h:form id="formAgregar">
+		<p:dialog id="dlgAgregar" header="Agregar Nuevo Reporte"
+			widgetVar="dialogoAgregar" relizable="false" showEffect="fade"
+			hideEffect="explode" modal="true">
+
+			<p:panelGrid colums="2" style="margin: 0 auto;">
+				<p:outputLabel value="TIPO:" />
+				<p:inputText value="#{controllerReport.reporte.tipo}" />
+
+				<p:outputLabel value="FOLIO:" />
+				<p:inputText value="#{controllerReport.reporte.folio}" />
+
+				<p:outputLabel value="COMENTARIO" />
+				<p:inputText value="#{controllerReport.reporte.comentario}" />
+			</p:panelGrid>
+
+			<p:commandButton value="Guardar Datos"
+				actionListener="#{controllerReport.addReport()}"
+				update=":formListado:tablaReportes"
+				oncomplete="PF('dialogoAgregar').hide();" />
+			<p:commandButton value="Cancelar"
+				onclick="PF('dialogoAgregar').hide();" />
+		</p:dialog>
+	</h:form>
+
+	<h:form id="formModificar">
+		<p:dialog id="dlgModificar" header="Editar Reporte"
+			widgetVar="dialogoModificar" relizable="false" showEffect="fade"
+			hideEffect="explode" modal="true">
+
+			<p:panelGrid colums="2" style="margin: 0 auto;">
+				<p:outputLabel value="TIPO:" />
+				<p:inputText value="#{controllerReport.reporte.tipo}" />
+
+				<p:outputLabel value="FOLIO:" />
+				<p:inputText value="#{controllerReport.reporte.folio}" />
+
+				<p:outputLabel value="COMENTARIO:" />
+				<p:inputText value="#{controllerReport.reporte.comentario}" />
+			</p:panelGrid>
+
+			<p:commandButton value="Actualizar Datos"
+				actionListener="#{controllerReport.modificarReport()}"
+				update=":formListado:tablaReportes"
+				oncomplete="PF('dialogoModificar').hide();" />
+			<p:commandButton value="Cancelar"
+				onclick="PF('dialogoModificar').hide();" />
+		</p:dialog>
+	</h:form>
+	<h:form id="formEliminar">
+		<p:dialog id="dlgEliminar" header="Eliminar Reporte"
+			widgetVar="dialogoEliminar" relizable="false" showEffect="fade"
+			hideEffect="explode" modal="true">
+
+			<p:outputLabel value="Realmente desea eliminar el registro?" />
+
+			<p:commandButton value="Si"
+				actionListener="#{controllerReport.deleteReport()}"
+				update=":formListado:tablaReportes"
+				oncomplete="PF('dialogoEliminar').hide();" />
+			<p:commandButton value="No" onclick="PF('dialogoEliminar').hide();" />
+		</p:dialog>
+	</h:form>
+
+
+
+</h:body>
+</html>
